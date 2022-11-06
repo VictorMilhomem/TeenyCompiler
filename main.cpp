@@ -2,18 +2,20 @@
 
 #include "./src/compiler.h"
 
-int main() {
-    std::string file_contents;
-    file_contents = getFileContents("D:\\Projects\\TinyCompiler\\examples\\example1.tiny");
-    int i = 0;
-    Lexer lexer{file_contents};
-    char current = lexer.GetPeek();
 
-    while (current != '\0')
-    {
-        Token *tk = lexer.Scan();
-        std::cout << "< "+ tk->lexeme + " >" << std::endl;
-        current = lexer.GetPeek();
-    }
+int main(int argc, char** argv) {
+
+    std::string file_contents;
+    file_contents = getFileContents("D:\\Projects\\TinyCompiler\\examples\\example3.tiny");
+
+    Lexer lexer{file_contents};
+    Emmiter emmiter{"out.c"};
+    Parser parser{lexer, emmiter};
+    parser.program();
+    parser.transpile_to_c();
+    std::system("gcc ./out.c ");
+    std::cout << "Compiled" << std::endl;
+
+
     return 0;
 }

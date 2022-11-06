@@ -10,11 +10,11 @@ class SyntaxError : std::exception
 public:
     SyntaxError(std::string msg, int line) : m_msg(msg), m_line(line)
     {
-
+        PrintSyntaxError();
     }
     void PrintSyntaxError()
     {
-        std::cout << "SyntaxError at line :: " + std::to_string(m_line) + " " + m_msg << std::endl;
+        std::cout << "\nSyntaxError at line  (" + std::to_string(m_line) + ") " + m_msg << std::endl;
     }
 private:
     std::string m_msg;

@@ -15,10 +15,9 @@
 enum Tag{
     // end of line
     NEWLINE = 0,
-    INTEGER = 1,
-    FLOAT = 2,
-    IDENT = 3,
-    STRING = 4,
+    NUMBER = 1,
+    IDENT = 2,
+    STRING = 3,
 
     //Keywords
 
@@ -34,7 +33,7 @@ enum Tag{
     REPEAT = 110,
     ENDWHILE = 111,
 
-  //Operators
+    //Operators
 
     EQ = 201,
     PLUS = 202,
@@ -61,10 +60,8 @@ struct Token
 
 class Lexer{
 public:
-    explicit Lexer(std::string src)
+    explicit Lexer(std::string src) : m_src(std::move(src))
     {
-        this->m_src = std::move(src);
-
         token_table["LABEL"] = Token{Tag::LABEL, "LABEL"};
         token_table["GOTO"] = Token{Tag::GOTO, "GOTO"};
         token_table["PRINT"] = Token{Tag::PRINT, "PRINT"};
@@ -79,9 +76,10 @@ public:
 
 
         m_peek = m_src[m_current];
+
     }
 
-    Lexer() {}
+    explicit Lexer(){}
 
     int Lineno() const
     {
@@ -92,7 +90,6 @@ public:
     {
 
         SkipWhiteSpace();
-
 
         if (m_peek ==  '\n')
         {
@@ -132,16 +129,8 @@ public:
                 m_peek = Get(m_src);
             }while (isdigit(m_peek) || m_peek == '.');
 
-            if (dot)
-            {
-                m_token = Token{Tag::FLOAT, ss.str()};
-                return &m_token;
-            }
-            else
-            {
-                m_token = Token{Tag::INTEGER, ss.str()};
-                return &m_token;
-            }
+            m_token = Token{Tag::NUMBER, ss.str()};
+            return &m_token;
         }
 
 
@@ -175,6 +164,9 @@ public:
 
         switch (m_peek)
         {
+            case '\0':
+                m_token = Token{EOF};
+                return &m_token;
 
             case '<': {
                 char next = Get(m_src);
@@ -285,20 +277,15 @@ public:
 
         }
 
-        if (m_peek == EOF)
-        {
-            m_token = Token{EOF};
-            return &m_token;
-        }
-
-        std::string msg = "Unknown Token " + std::to_string(m_peek);
-        throw SyntaxError{msg, m_line};
+        m_token = Token{EOF, "EOF"};
+        return &m_token;
     }
 
     char GetPeek() const
     {
         return m_peek;
     }
+
 private:
     std::string m_src;
     char m_peek;

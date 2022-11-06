@@ -2,6 +2,7 @@
 #define TINYCOMPILER_COMPILER_H
 
 #include "lexer.h"
+#include "parser.h"
 #include <fstream>
 using  namespace std;
 
