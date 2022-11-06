@@ -5,16 +5,19 @@
 
 int main(int argc, char** argv) {
 
-    std::string file_contents;
-    file_contents = getFileContents("D:\\Projects\\TinyCompiler\\examples\\example3.tiny");
+    if (argc == 2) {
+        std::string file_contents;
+        std::string fullPath = argv[1];
+        file_contents = getFileContents(fullPath);
 
-    Lexer lexer{file_contents};
-    Emmiter emmiter{"out.c"};
-    Parser parser{lexer, emmiter};
-    parser.program();
-    parser.transpile_to_c();
-    std::system("gcc ./out.c ");
-    std::cout << "Compiled" << std::endl;
+        Lexer lexer{file_contents};
+        Emmiter emmiter{"out.c"};
+        Parser parser{lexer, emmiter};
+        parser.program();
+        parser.transpile_to_c();
+        std::system("gcc ./out.c ");
+        std::cout << "Compilation " + fullPath + " finished"<< std::endl;
+    }
 
 
     return 0;
