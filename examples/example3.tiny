@@ -15,4 +15,3 @@ ENDWHILE
 
 PRINT "Average: "
 PRINT s / a
-
