@@ -88,6 +88,12 @@ public:
 
     Token* Scan()
     {
+        m_file_index++;
+        if (m_file_index == m_src.length())
+        {
+            m_token = Token{EOF};
+            return &m_token;
+        }
 
         SkipWhiteSpace();
 
@@ -164,9 +170,6 @@ public:
 
         switch (m_peek)
         {
-            case '\0':
-                m_token = Token{EOF};
-                return &m_token;
 
             case '<': {
                 char next = Get(m_src);
@@ -292,6 +295,7 @@ private:
     Token m_token;
     int m_line = 1;
     int m_current = 0;
+    size_t m_file_index = -1;
 
 
     std::unordered_map<std::string, Token> token_table;

@@ -180,7 +180,8 @@ private:
             }
             default: throw SyntaxError{"Invalid statement " + m_lookahead->lexeme, m_lexer.Lineno()};
         }
-        new_line();
+        if (!check_lookahead(EOF))
+            new_line();
     }
 
     void new_line()
